@@ -1,0 +1,142 @@
+package com.rsa.action;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
+import com.rsa.service.CheckService;
+import com.rsa.util.DictionaryUtil;
+import com.rsa.util.JsonUtil;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
+/**
+ * 验证相关接口
+ * 
+ * @author liming
+ * @date 2017年5月10日
+ *
+ */
+@Api(value = "check验证相关接口", description = "验证相关接口")
+@Controller
+@RequestMapping("/check")
+public class CheckAction {
+	@Autowired
+	private CheckService checkService;
+
+	private static final Logger log = Logger.getLogger(CheckAction.class);
+
+	@ApiOperation(value = "校验签名", response = JSONObject.class, notes = "")
+	@RequestMapping(value = "/check", method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+			"application/json;charset=UTF-8" })
+	@ResponseBody
+	public String check(HttpServletRequest request, HttpServletResponse response,
+			@ApiParam(required = true, value = "sign") @RequestParam(value = "sign", defaultValue = "") String sign,
+			@ApiParam(required = true, value = "channelCode") @RequestParam(value = "channelCode", defaultValue = "") String channelCode,
+			@ApiParam(required = true, value = "url") @RequestParam(value = "url", defaultValue = "") String url) {
+		// url = "http://192.168.1.100:8082//RSACenter/swagger-ui.html";
+		// sign = "jrxN1kM46GIeABv9EmwGgCaYwOlD4KkgrK3fyCPJwloUpf+fSSal+"
+		// + "oa7CblPWDBDA92tOdMhS3uPX7CfWzYCcidYeuK6f63VW1H7pBa"
+		// +
+		// "OV8l8MDTpbuWTJBzlpv23wzqNhG2RCZb8RuYwaxaOuul+uvyyrNWnCkheXxIe1pa27l0=";
+		// channelCode="A0001";
+		boolean flag = checkService.checkRSA(url, sign, channelCode);
+		System.out.println(flag);
+		if (flag) {
+			return JsonUtil.toJson(DictionaryUtil.RS_SUCCESS, DictionaryUtil.SUCCESS_MSG, null);
+		} else {
+			return JsonUtil.toJson(DictionaryUtil.RS_FAIL, DictionaryUtil.FAIL_MSG, null);
+		}
+	}
+
+	// @ApiOperation(value = "", response = JSONObject.class, notes = "")
+	@RequestMapping(value = "/checkUrl", method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+			"application/json;charset=UTF-8" })
+	@ResponseBody
+	public String checkUrl(HttpServletRequest request, HttpServletResponse response,
+			@ApiParam(required = true, value = "loginUser") @RequestParam(value = "loginUser", defaultValue = "") String loginUser) {
+		log.info("==" + request.getRequestURL() + ",getQueryString " + request.getQueryString() + ",getRemoteHost"
+				+ request.getRemoteHost() + ",getRemotePort" + request.getRemotePort() + ",getLocalAddr"
+				+ request.getLocalAddr() + ",getLocalName" + request.getLocalName() + ",getServletPath"
+				+ request.getServletPath() + ",getServerName" + request.getServerName());
+		int count = 0;
+		log.info("==================" + count);
+		if (count != 10) {
+			try {
+				response.sendRedirect(request.getRequestURL() + "");
+				// request.getRequestDispatcher(request.getRequestURL()+"").forward(request,
+				// response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		count++;
+		log.info("count:" + count);
+		return count + "";
+		// int result = 0;
+		// if(result==1){
+		// return JsonUtil.toJson(DictionaryUtil.RS_SUCCESS,
+		// DictionaryUtil.SUCCESS_MSG, null);
+		// }else{
+		// return JsonUtil.toJson(DictionaryUtil.RS_FAIL,
+		// DictionaryUtil.FAIL_MSG, null);
+		// }
+	}
+
+	@RequestMapping(value = "/getIpAddress", method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+			"application/json;charset=UTF-8" })
+	@ResponseBody
+	public String getIpAddress(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");
+
+		if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+			// 多次反向代理后会有多个ip值，第一个ip才是真实ip
+			int index = ip.indexOf(",");
+			if (index != -1) {
+				return ip.substring(0, index);
+			} else {
+				return ip;
+			}
+		}
+		ip = request.getHeader("X-Real-IP");
+		log.info("==" + ip);
+		if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+			return ip;
+		}
+		log.info("==" + request.getRemoteAddr());
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("X-Real-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		log.info(ip + "====");
+
+		return request.getRemoteAddr();
+	}
+
+}

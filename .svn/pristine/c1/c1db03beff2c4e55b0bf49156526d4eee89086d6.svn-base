@@ -1,0 +1,68 @@
+package com.rsa.rsa;
+
+import com.keytools.util.Base64;
+import com.keytools.util.RSAEncrypt;
+import com.keytools.util.RSASignature;
+
+/**
+ * 
+ * 客户调用方法
+ * @date 2017年5月15日
+ *
+ */
+public class ClientTest {
+	public static void main(String[] args) throws Exception {
+		String filepath="E:/key";
+		//私钥---对应privateKey.keystore的字符串
+		String privateKey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAK/TKPb9Iv8DE4VpcCkTIPFPhzBMW3AodJd8EumX7KljHH8FFYHjTvzgBClkyuYHoqjjZozJPdXu9Hvl7qZHBV6veFiyOg6S1n5TmGmXH4KPb5znAaU736FEcZW9osX4b2t3evCOjxvExSAXELjYr4DB5ezLA4E5vYybE4QrvL3BAgMBAAECgYBfgZUb7M7otLQS4P4y4ZggXDGz85Yrq14BtzzStFqyfArLmGhhYKbUR58bGQv5vaYGlVdsHBhBsAYPkwt6ONPZ/eXhX1I7YeycEUXQSbuzN8yITs7Y10cceEPNmjV9wLjzzKi7XRl+pr3DWcGQz6KnEo3U3n6MEloPj3eAObyBbQJBAO6LeVChqbbyIyhHg8a6+zSwZm9M8p6wjG2IXeylEC1qZmlqkTotmWSvy5LOLB9OWPS5/5riDgZzREJZ9MULP4MCQQC8sMm9zcp2ZTGnuY/RTIKrXpG8bIlSN0J3DNghR8BKagCQL2UmBSlYrjqjkFybNYOcNRIZIVLcuKzwz7YYaWZrAkEAxCTrG+HSKxvuzLABKueUpz5k/B/JX7LLxUTb9jnDk5RpoUR/JddYyfHC8nOU1CkX/CL0ieZWofclqWlOWrdlAQJAOzZnOK7ZuCmtWWr73LxbzRdSOIT+2tQIgX+AW4E+sJtvLdARt8qq3O9f63Aj/3jdoiltUoGIlUdGzhMAm8yHnQJAJ1b2TijfiobDoscVvZqH6dkaRZofsiLrgOfnktrxm71YYI/pdU7rjBjmPL0oOSL4BehNLZRlFGleGFjiFZV8dg==";
+		//公钥---对应publicKey.keystore的字符串
+		String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCv0yj2/SL/AxOFaXApEyDxT4cwTFtwKHSXfBLpl+ypYxx/BRWB40784AQpZMrmB6Ko42aMyT3V7vR75e6mRwVer3hYsjoOktZ+U5hplx+Cj2+c5wGlO9+hRHGVvaLF+G9rd3rwjo8bxMUgFxC42K+AweXsywOBOb2MmxOEK7y9wQIDAQAB";
+		System.out.println("--------------公钥加密私钥解密过程-------------------");
+		String plainText="userId=123&pwd=222&sex=nv&channelCode=HW";
+		//公钥加密过程
+		//第一种。直接读取文件进行加密
+//		byte[] cipherData=RSAEncrypt.encrypt(RSAEncrypt.loadPublicKeyByStr(RSAEncrypt.loadPublicKeyByFile(filepath)),plainText.getBytes());
+		//第二种。直接定义变量进行加密
+		byte[] cipherData=RSAEncrypt.encrypt(RSAEncrypt.loadPublicKeyByStr(publicKey),plainText.getBytes());
+		String cipher=Base64.encode(cipherData);
+		System.out.println("=="+cipher);
+		//私钥解密过程
+		//第一种。直接读取文件进行解密
+//		byte[] res=RSAEncrypt.decrypt(RSAEncrypt.loadPrivateKeyByStr(RSAEncrypt.loadPrivateKeyByFile(filepath)), Base64.decode(cipher));
+		//第二种。直接定义变量进行解密
+		byte[] res = RSAEncrypt.decrypt(RSAEncrypt.loadPrivateKeyByStr(privateKey), Base64.decode(cipher));
+		String restr=new String(res);
+		System.out.println("原文："+plainText);
+		System.out.println("加密："+cipher);
+		System.out.println("解密："+restr);
+		System.out.println();
+		
+//		System.out.println("--------------私钥加密公钥解密过程-------------------");
+//		plainText="ihep_私钥加密公钥解密";
+//		//私钥加密过程
+//		cipherData=RSAEncrypt.encrypt(RSAEncrypt.loadPrivateKeyByStr(RSAEncrypt.loadPrivateKeyByFile(filepath)),plainText.getBytes());
+//		cipher=Base64.encode(cipherData);
+//		//公钥解密过程
+//		res=RSAEncrypt.decrypt(RSAEncrypt.loadPublicKeyByStr(RSAEncrypt.loadPublicKeyByFile(filepath)), Base64.decode(cipher));
+//		restr=new String(res);
+//		System.out.println("原文："+plainText);
+//		System.out.println("加密："+cipher);
+//		System.out.println("解密："+restr);
+//		System.out.println();
+		
+//		System.out.println("---------------私钥签名过程------------------");
+//		String content="ihep_这是用于签名的原始数据";
+//		String signstr=RSASignature.sign(content,RSAEncrypt.loadPrivateKeyByFile(filepath));
+//		System.out.println("签名原串："+content);
+//		System.out.println("签名串："+signstr);
+//		System.out.println();
+//		
+//		System.out.println("---------------公钥校验签名------------------");
+//		System.out.println("签名原串："+content);
+//		System.out.println("签名串："+signstr);
+//		
+//		System.out.println("验签结果："+RSASignature.doCheck(content, signstr, RSAEncrypt.loadPublicKeyByFile(filepath)));
+//		System.out.println();
+		
+	}
+}

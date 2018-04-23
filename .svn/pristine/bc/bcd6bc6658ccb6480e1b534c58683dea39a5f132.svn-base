@@ -1,0 +1,159 @@
+package com.rsa.action;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
+import com.rsa.bean.ChannelInfo;
+import com.rsa.job.RsaInfoJob;
+import com.rsa.service.ChannelInfoService;
+import com.rsa.service.CheckService;
+import com.rsa.util.DictionaryUtil;
+import com.rsa.util.JsonUtil;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
+/**
+ * 验证相关接口
+ * 
+ * @date 2017年5月10日
+ *
+ */
+@Api(value = "check验证相关接口", description = "验证相关接口")
+@Controller
+@RequestMapping("/check")
+public class CheckAction {
+	@Autowired
+	private CheckService checkService;
+	@Autowired
+//	private RsaInfoService rsaInfoService;
+	private ChannelInfoService channelInfoService;
+
+	private static final Logger log = Logger.getLogger(CheckAction.class);
+
+	@ApiOperation(value = "校验签名", response = JSONObject.class, notes = "")
+	@RequestMapping(value = "/check", method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+			"application/json;charset=UTF-8" })
+	@ResponseBody
+	public String check(HttpServletRequest request, HttpServletResponse response,
+			@ApiParam(required = true, value = "sign") @RequestParam(value = "sign", defaultValue = "") String sign,
+			@ApiParam(required = true, value = "channelCode") @RequestParam(value = "channelCode", defaultValue = "") String channelCode,
+			@ApiParam(required = false, value = "ip") @RequestParam(value = "ip", defaultValue = "") String ip) {
+		// url = "http://192.168.1.100:8082//RSACenter/swagger-ui.html";
+		// sign = "jrxN1kM46GIeABv9EmwGgCaYwOlD4KkgrK3fyCPJwloUpf+fSSal+"
+		// + "oa7CblPWDBDA92tOdMhS3uPX7CfWzYCcidYeuK6f63VW1H7pBa"
+		// +
+		// "OV8l8MDTpbuWTJBzlpv23wzqNhG2RCZb8RuYwaxaOuul+uvyyrNWnCkheXxIe1pa27l0=";
+		// channelCode="A0001";
+		log.info("channelCode:=="+channelCode+",ip:=="+ip+",sign:==="+sign);
+		boolean flag = checkService.checkRSA(ip, sign, channelCode);
+		log.info(flag);
+		if (flag) {
+			return JsonUtil.toJson(DictionaryUtil.RS_SUCCESS, DictionaryUtil.SUCCESS_MSG, null);
+		} else {
+			return JsonUtil.toJson(DictionaryUtil.RS_FAIL, DictionaryUtil.FAIL_MSG, null);
+		}
+	}
+	
+	/**
+	 * 手动初始化 渠道的详细信息
+	 */
+	@RequestMapping(value = "/init", method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+			"application/json;charset=UTF-8" })
+	public void init() {
+		log.info("获取所有渠道的详细信息 start："+new Date());
+    	List<ChannelInfo> list = channelInfoService.selectAll();
+    	if(list==null||list.isEmpty()){
+    		log.info("获取所有渠道的数量为空");
+    		return;
+    	}
+    	log.info("获取所有渠道的数量为:"+list.size());
+    	List<String> channelCodeList = new ArrayList<String>();//渠道
+    	List<String> ipList = new ArrayList<String>();//IP
+    	List<String> privateKeyList = new ArrayList<String>();//私钥
+    	List<String> publicKeyList = new ArrayList<String>();//公钥
+    	List<String> domainNameList = new ArrayList<String>();//域名
+    	for(ChannelInfo channelInfo : list){
+    		RsaInfoJob.RSA_INFO_MAP.put(channelInfo.getChannelCode(), channelInfo);
+    		channelCodeList.add(channelInfo.getChannelCode());
+    		privateKeyList.add(channelInfo.getPrivateKey());
+    		publicKeyList.add(channelInfo.getPublicKey());
+    		domainNameList.add(channelInfo.getDomainName());
+    		if(channelInfo.getIp().contains(";")){
+				String [] rsaArray = channelInfo.getIp().split(";");
+				for(String rasString : rsaArray){
+					ipList.add(rasString);
+				}
+			}else{
+				ipList.add(channelInfo.getIp());
+			}
+    	}
+    	RsaInfoJob.RSA_LIST_MAP.put("channelCodeList", channelCodeList);
+    	RsaInfoJob.RSA_LIST_MAP.put("ipList", ipList);
+    	RsaInfoJob.RSA_LIST_MAP.put("privateKeyList", privateKeyList);
+    	RsaInfoJob.RSA_LIST_MAP.put("publicKeyList", publicKeyList);
+    	RsaInfoJob.RSA_LIST_MAP.put("domainNameList", domainNameList);
+    	log.info("获取所有渠道的详细信息 end："+new Date());
+	}
+	
+	@RequestMapping(value = "/getIpAddress", method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+			"application/json;charset=UTF-8" })
+	@ResponseBody
+	public String getIpAddress(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");
+
+		if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+			// 多次反向代理后会有多个ip值，第一个ip才是真实ip
+			int index = ip.indexOf(",");
+			if (index != -1) {
+				return ip.substring(0, index);
+			} else {
+				return ip;
+			}
+		}
+		ip = request.getHeader("X-Real-IP");
+		log.info("==" + ip);
+		if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
+			return ip;
+		}
+		log.info("==" + request.getRemoteAddr());
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("X-Real-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		log.info(ip + "====");
+
+		return request.getRemoteAddr();
+	}
+
+}

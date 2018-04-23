@@ -1,0 +1,104 @@
+package com.rsa.service.impl;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.rsa.bean.RsaInfo;
+import com.rsa.rsa.Base64;
+import com.rsa.rsa.RSAEncrypt;
+import com.rsa.service.CheckService;
+import com.rsa.service.RsaInfoService;
+
+/**
+ * 检验URL是否可用
+ * @author liming
+ * @date 2017年5月11日
+ *
+ */
+@Service("checkService")
+public class CheckServiceImpl implements CheckService{
+	private static final Logger log = Logger.getLogger(CheckServiceImpl.class);
+	@Autowired
+	private RsaInfoService rsaInfoService;
+	/**
+	 * 检测IP地址
+	 * @param url
+	 * @return
+	 */
+	@Override
+	public boolean checkIP(String url){
+		int firstNum = 0;
+		for(int i =0;i<url.length();i++){
+			char a = url.charAt(i);
+			if(a>'0'&&a<='9'){
+				firstNum = i;
+				break;
+			}
+		}
+		if(firstNum==0){//URL中没有数字
+			return false;
+		}
+		url = url.substring(firstNum);
+		log.info(url);
+		url = url.substring(0, url.indexOf(":"));
+		log.info(url);
+		//去数据库查询 看是否存在这个IP地址或者域名
+		List<String> ips = rsaInfoService.getAllIp();
+		if(ips.contains(url)){
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * 检测URL
+	 * @param url URL地址
+	 * @param sign 签名
+	 * @param channelCode 渠道号
+	 * @return
+	 */
+	@Override
+	public boolean checkRSA(String url,String sign,String channelCode){
+		if(checkIP(url)){
+			//需要用私钥进行解密
+			RsaInfo rsaInfo = new RsaInfo();
+			rsaInfo.setChannelCode(channelCode);
+			rsaInfo = rsaInfoService.selectByParam(rsaInfo);
+			String privateKey = rsaInfo.getPrivateKey();
+			byte[] res = null;
+			try {
+				//解密操作
+				res = RSAEncrypt.decrypt(RSAEncrypt.loadPrivateKeyByStr(privateKey), Base64.decode(sign));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			String returnSign=new String(res);
+			String [] signArray = returnSign.split("&");
+			String code = "";
+			for(String str : signArray){
+				if(str.contains("channelCode")){
+					code = str;
+					break;
+				}
+			}
+			if(StringUtils.isNotEmpty(code)){
+				code = code.substring(code.indexOf("=")+1);
+			}
+			List<String> channelCodeList = rsaInfoService.getAllChannelCode();
+			if(channelCodeList.contains(code)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static void main(String[] args) {
+//		checkURL("http://192.168.1.100:8082//RSACenter/check/checkUrl");
+//		System.out.println(1000==1000);
+		String code = "channel=A123";
+		System.out.println(code.substring(code.indexOf("=")+1));
+	}
+}

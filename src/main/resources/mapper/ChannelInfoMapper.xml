@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rsa.dao.ChannelInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.rsa.bean.ChannelInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_info" property="channelInfo" jdbcType="VARCHAR" />
+    <result column="public_key" property="publicKey" jdbcType="VARCHAR" />
+    <result column="private_key" property="privateKey" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="domain_name" property="domainName" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="account_type" property="accountType" jdbcType="VARCHAR" />
+    <result column="dbStr" property="dbstr" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="user_transaction_rate" property="userTransactionRate" jdbcType="VARCHAR" />
+    <result column="channel_transaction_rate" property="channelTransactionRate" jdbcType="VARCHAR" />
+    <result column="user_interest_rate" property="userInterestRate" jdbcType="VARCHAR" />
+    <result column="channel_interest_rate" property="channelInterestRate" jdbcType="VARCHAR" />
+    <result column="commission_rate" property="commissionRate" jdbcType="VARCHAR" />
+    <result column="trade_rate" property="tradeRate" jdbcType="VARCHAR" />
+    <result column="trade_fee" property="tradeFee" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="remark1" property="remark1" jdbcType="VARCHAR" />
+    <result column="remark2" property="remark2" jdbcType="VARCHAR" />
+    <result column="remark3" property="remark3" jdbcType="VARCHAR" />
+    <result column="remark4" property="remark4" jdbcType="VARCHAR" />
+    <result column="remark5" property="remark5" jdbcType="VARCHAR" />
+    <result column="remark6" property="remark6" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channel_code, channel_name, channel_info, public_key, private_key, ip, domain_name, 
+    group_id, account_type, dbStr, is_del, create_date, update_date, user_transaction_rate, 
+    channel_transaction_rate, user_interest_rate, channel_interest_rate, commission_rate, 
+    trade_rate, trade_fee, remark, remark1, remark2, remark3, remark4, remark5, remark6
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mt_channel_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mt_channel_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rsa.bean.ChannelInfo" >
+    insert into mt_channel_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="channelInfo != null" >
+        channel_info,
+      </if>
+      <if test="publicKey != null" >
+        public_key,
+      </if>
+      <if test="privateKey != null" >
+        private_key,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="domainName != null" >
+        domain_name,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="dbstr != null" >
+        dbStr,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="userTransactionRate != null" >
+        user_transaction_rate,
+      </if>
+      <if test="channelTransactionRate != null" >
+        channel_transaction_rate,
+      </if>
+      <if test="userInterestRate != null" >
+        user_interest_rate,
+      </if>
+      <if test="channelInterestRate != null" >
+        channel_interest_rate,
+      </if>
+      <if test="commissionRate != null" >
+        commission_rate,
+      </if>
+      <if test="tradeRate != null" >
+        trade_rate,
+      </if>
+      <if test="tradeFee != null" >
+        trade_fee,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="remark1 != null" >
+        remark1,
+      </if>
+      <if test="remark2 != null" >
+        remark2,
+      </if>
+      <if test="remark3 != null" >
+        remark3,
+      </if>
+      <if test="remark4 != null" >
+        remark4,
+      </if>
+      <if test="remark5 != null" >
+        remark5,
+      </if>
+      <if test="remark6 != null" >
+        remark6,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelInfo != null" >
+        #{channelInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="publicKey != null" >
+        #{publicKey,jdbcType=VARCHAR},
+      </if>
+      <if test="privateKey != null" >
+        #{privateKey,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="domainName != null" >
+        #{domainName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="dbstr != null" >
+        #{dbstr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userTransactionRate != null" >
+        #{userTransactionRate,jdbcType=VARCHAR},
+      </if>
+      <if test="channelTransactionRate != null" >
+        #{channelTransactionRate,jdbcType=VARCHAR},
+      </if>
+      <if test="userInterestRate != null" >
+        #{userInterestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="channelInterestRate != null" >
+        #{channelInterestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionRate != null" >
+        #{commissionRate,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeRate != null" >
+        #{tradeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeFee != null" >
+        #{tradeFee,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="remark4 != null" >
+        #{remark4,jdbcType=VARCHAR},
+      </if>
+      <if test="remark5 != null" >
+        #{remark5,jdbcType=VARCHAR},
+      </if>
+      <if test="remark6 != null" >
+        #{remark6,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rsa.bean.ChannelInfo" >
+    update mt_channel_info
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelInfo != null" >
+        channel_info = #{channelInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="publicKey != null" >
+        public_key = #{publicKey,jdbcType=VARCHAR},
+      </if>
+      <if test="privateKey != null" >
+        private_key = #{privateKey,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="domainName != null" >
+        domain_name = #{domainName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        account_type = #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="dbstr != null" >
+        dbStr = #{dbstr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userTransactionRate != null" >
+        user_transaction_rate = #{userTransactionRate,jdbcType=VARCHAR},
+      </if>
+      <if test="channelTransactionRate != null" >
+        channel_transaction_rate = #{channelTransactionRate,jdbcType=VARCHAR},
+      </if>
+      <if test="userInterestRate != null" >
+        user_interest_rate = #{userInterestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="channelInterestRate != null" >
+        channel_interest_rate = #{channelInterestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionRate != null" >
+        commission_rate = #{commissionRate,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeRate != null" >
+        trade_rate = #{tradeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeFee != null" >
+        trade_fee = #{tradeFee,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        remark1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        remark2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        remark3 = #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="remark4 != null" >
+        remark4 = #{remark4,jdbcType=VARCHAR},
+      </if>
+      <if test="remark5 != null" >
+        remark5 = #{remark5,jdbcType=VARCHAR},
+      </if>
+      <if test="remark6 != null" >
+        remark6 = #{remark6,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件查询 -->
+  <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.rsa.bean.ChannelInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from mt_channel_info
+    where 1=1
+    <if test="id != null and id != '' " >
+      and id = #{id,jdbcType=INTEGER} 
+    </if>
+    <if test="channelCode != null and channelCode != '' " >
+      and channel_code = #{channelCode,jdbcType=VARCHAR}
+    </if>
+    <if test="channelName != null and channelName != '' " >
+      and channel_name like '%${channelName}%'
+    </if>
+    <if test="channelInfo != null and channelInfo != '' " >
+      and channel_info = #{channelInfo,jdbcType=VARCHAR}
+    </if>
+    <if test="publicKey != null and publicKey != '' " >
+      and public_key = #{publicKey,jdbcType=VARCHAR}
+    </if>
+    <if test="privateKey != null and privateKey != '' " >
+      and private_key = #{privateKey,jdbcType=VARCHAR}
+    </if>
+    <if test="ip != null and ip != '' " >
+      and ip = #{ip,jdbcType=VARCHAR}
+    </if>
+    <if test="domainName != null and domainName != ''" >
+      and domain_name = #{domainName,jdbcType=VARCHAR}
+    </if>
+    <if test="groupId != null and groupId != '' " >
+      and group_id = #{groupId,jdbcType=VARCHAR}
+    </if>
+    <if test="accountType != null and accountType != '' " >
+      and account_type = #{accountType,jdbcType=VARCHAR}
+    </if>
+    <if test="dbstr != null and dbstr != '' " >
+      and dbStr = #{dbstr,jdbcType=VARCHAR}
+    </if>
+    <if test="isDel != null and isDel != '' " >
+      and is_del = #{isDel,jdbcType=VARCHAR}
+    </if>
+    <if test="createDate != null" >
+      and create_date = #{createDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateDate != null" >
+      and update_date = #{updateDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="userTransactionRate != null and userTransactionRate != '' " >
+      and user_transaction_rate = #{userTransactionRate,jdbcType=VARCHAR}
+    </if>
+    <if test="channelTransactionRate != null and channelTransactionRate != '' " >
+      and channel_transaction_rate = #{channelTransactionRate,jdbcType=VARCHAR}
+    </if>
+    <if test="userInterestRate != null and userInterestRate != '' " >
+      and user_interest_rate = #{userInterestRate,jdbcType=VARCHAR}
+    </if>
+    <if test="channelInterestRate != null and channelInterestRate != '' " >
+      and channel_interest_rate = #{channelInterestRate,jdbcType=VARCHAR}
+    </if>
+    <if test="commissionRate != null and commissionRate != '' " >
+      and commission_rate = #{commissionRate,jdbcType=VARCHAR}
+    </if>
+    <if test="tradeRate != null and tradeRate != '' " >
+      and trade_rate = #{tradeRate,jdbcType=VARCHAR}
+    </if>
+    <if test="tradeFee != null and tradeFee != '' " >
+      and trade_fee = #{tradeFee,jdbcType=VARCHAR}
+    </if>
+    <if test="remark != null and remark != '' " >
+      and remark = #{remark,jdbcType=VARCHAR}
+    </if>
+    <if test="remark1 != null and remark1 != '' " >
+      and remark1 = #{remark1,jdbcType=VARCHAR}
+    </if>
+    <if test="remark2 != null and remark2 != '' " >
+      and remark2 = #{remark2,jdbcType=VARCHAR}
+    </if>
+    <if test="remark3 != null and remark3 != '' " >
+      and remark3 = #{remark3,jdbcType=VARCHAR}
+    </if>
+    <if test="remark4 != null and remark4 != '' " >
+      and remark4 = #{remark4,jdbcType=VARCHAR}
+    </if>
+    <if test="remark5 != null and remark5 != '' " >
+      and remark5 = #{remark5,jdbcType=VARCHAR}
+    </if>
+    <if test="remark6 != null and remark6 != '' " >
+      and remark6 = #{remark6,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <!-- 根据渠道号查询渠道信息 -->
+  <select id="queryByChannelCode" resultMap="BaseResultMap" parameterType="String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mt_channel_info
+    where channel_code = #{channelCode,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询所有  -->
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from mt_channel_info where is_del = '0'
+  </select>
+</mapper>

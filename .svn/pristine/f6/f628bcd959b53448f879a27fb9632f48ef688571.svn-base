@@ -1,0 +1,22 @@
+dirver=com.mysql.jdbc.Driver
+url=jdbc:mysql://223.203.132.139:3310/gj_mt?autoReconnect=true&useCompression=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+username=mmdb
+password=mm6543123
+
+#dirver=com.mysql.jdbc.Driver
+#url=jdbc:mysql://223.203.132.138:3306/mm_trade?autoReconnect=true&useCompression=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+#username=mmtest
+#password=mm1q2w3e4r
+
+initialSize=5
+minIdle=5
+maxActive=100
+maxWait=3000
+timeBetweenEvictionRunsMillis=3000
+minEvictableIdleTimeMillis=30000
+validationQuery=SELECT 1
+testWhileIdle=true
+testOnBorrow=true
+testOnReturn=true
+poolPreparedStatements=true
+maxPoolPreparedStatementPerConnectionSize=100 

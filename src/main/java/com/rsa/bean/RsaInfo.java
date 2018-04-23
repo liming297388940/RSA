@@ -1,0 +1,149 @@
+package com.rsa.bean;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class RsaInfo implements Serializable{
+	
+	private static final long serialVersionUID = -3886548129596296760L;
+
+	private Integer id;
+
+    private String channelCode;
+
+    private String channelName;
+
+    private String channelInfo;
+
+    private String publicKey;
+
+    private String privateKey;
+
+    private String ip;
+
+    private String domainName;
+
+    private String isDel;
+
+    private Date createDate;
+
+    private Date updateDate;
+
+    private String remark;
+
+    private String remark1;
+
+    private String remark2;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getChannelCode() {
+        return channelCode;
+    }
+
+    public void setChannelCode(String channelCode) {
+        this.channelCode = channelCode == null ? null : channelCode.trim();
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName == null ? null : channelName.trim();
+    }
+
+    public String getChannelInfo() {
+        return channelInfo;
+    }
+
+    public void setChannelInfo(String channelInfo) {
+        this.channelInfo = channelInfo == null ? null : channelInfo.trim();
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey == null ? null : publicKey.trim();
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey == null ? null : privateKey.trim();
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip == null ? null : ip.trim();
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName == null ? null : domainName.trim();
+    }
+
+    public String getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel == null ? null : isDel.trim();
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getRemark1() {
+        return remark1;
+    }
+
+    public void setRemark1(String remark1) {
+        this.remark1 = remark1 == null ? null : remark1.trim();
+    }
+
+    public String getRemark2() {
+        return remark2;
+    }
+
+    public void setRemark2(String remark2) {
+        this.remark2 = remark2 == null ? null : remark2.trim();
+    }
+}

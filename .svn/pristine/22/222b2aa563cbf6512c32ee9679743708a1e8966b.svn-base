@@ -1,0 +1,52 @@
+package com.rsa.service;
+
+import java.util.List;
+
+import com.rsa.bean.RsaInfo;
+/**
+ * 第三方校验信息接口
+ * @date 2017年5月11日
+ *
+ */
+public interface RsaInfoService {
+	/**
+	 * 删除
+	 * @param id
+	 * @return
+	 */
+    int deleteByPrimaryKey(Integer id);
+    /**
+     * 新增
+     * @param record
+     * @return
+     */
+    int insert(RsaInfo record);
+    /**
+     * 根据条件查询
+     * @param id
+     * @return
+     */
+    RsaInfo selectByParam(RsaInfo rsaInfo);
+    /**
+     * 修改
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKeySelective(RsaInfo record);
+    
+    /**
+     * 查询所有
+     * @return
+     */
+    List<RsaInfo> selectAll();
+    /**
+     * 查询所有IP地址
+     * @return
+     */
+    List<String> getAllIp();
+    /**
+     * 查询所有渠道
+     * @return
+     */
+    List<String> getAllChannelCode();
+}
